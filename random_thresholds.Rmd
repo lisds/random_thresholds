@@ -1,0 +1,66 @@
+---
+jupyter:
+  jupytext:
+    notebook_metadata_filter: all,-language_info
+    split_at_heading: true
+    text_representation:
+      extension: .Rmd
+      format_name: rmarkdown
+      format_version: '1.2'
+      jupytext_version: 1.14.1
+  kernelspec:
+    display_name: Python 3 (ipykernel)
+    language: python
+    name: python3
+---
+
+```{python}
+import numpy as np
+
+rng = np.random.default_rng()
+
+import matplotlib.pyplot as plt
+```
+
+```{python}
+def is_running_max(values):
+    n = len(values)
+    run_max = np.zeros(n, dtype=int)
+    current_max = -np.inf
+    for i in np.arange(n):
+        value = values[i]
+        if value > current_max:
+            run_max[i] = 1  # 1 means this was the largest so far.
+            current_max = value
+    return run_max
+```
+
+```{python}
+years = np.arange(2000, 2021, dtype=int)
+```
+
+```{python}
+n_years = len(years)
+coolest = rng.normal(-5, 1, size=n_years)
+warmest = rng.normal(99, 1.5, size=n_years)
+is_running_coolest = is_running_max(-coolest)
+is_running_warmest = is_running_max(warmest)
+is_running_warmest
+```
+
+```{python}
+n_coolest = np.zeros(n_years, dtype=int)
+n_warmest = np.zeros(n_years, dtype=int)
+for state_no in np.arange(48):  # 48 contiguous states.
+    coolest = rng.normal(-5, 1, size=n_years)
+    warmest = rng.normal(99, 1.5, size=n_years)
+    is_running_coolest = is_running_max(-coolest)
+    is_running_warmest = is_running_max(warmest)
+    n_coolest = n_coolest + is_running_coolest
+    n_warmest = n_warmest + is_running_warmest
+n_coolest
+```
+
+```{python}
+n_warmest
+```
